@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "226786710419",
+    "project_id": "mentorium-9e9e2",
+    "storage_bucket": "mentorium-9e9e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226786710419:android:05f0d887b33f6f06d9ce66",
+        "android_client_info": {
+          "package_name": "com.example.mentorium"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuy-lAVcy3h95wtvDZfF43MXKgaWRGzrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226786710419:android:769beb464fa1ca74d9ce66",
+        "android_client_info": {
+          "package_name": "com.platovco.repetitor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuy-lAVcy3h95wtvDZfF43MXKgaWRGzrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
