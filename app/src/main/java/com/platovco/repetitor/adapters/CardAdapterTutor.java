@@ -25,6 +25,11 @@ public class CardAdapterTutor extends RecyclerView.Adapter<CardAdapterTutor.MyVi
         this.context = context;
     }
 
+    public void setStudents(List<cardStudent> students) {
+        this.cardList = students;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public CardAdapterTutor.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -1,5 +1,6 @@
 package com.platovco.repetitor.fragments.tutor.TutorSearch;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,28 +18,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.platovco.repetitor.R;
-import com.platovco.repetitor.adapters.CardAdapterTutor;
 import com.platovco.repetitor.adapters.TutorAdapter;
-import com.platovco.repetitor.adapters.TutorData;
 import com.platovco.repetitor.databinding.FragmentTutorSearchBinding;
-import com.platovco.repetitor.managers.AppwriteManager;
-import com.platovco.repetitor.models.cardStudent;
-import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
-import com.yuyakaido.android.cardstackview.CardStackView;
-
-import org.jetbrains.annotations.Contract;
+import com.platovco.repetitor.models.StudentAccount;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TutorSearchFragment extends Fragment {
 
     private FragmentTutorSearchBinding binding;
     private TutorSearchViewModel mViewModel;
-    private RecyclerView cardStack;
-    ArrayList<cardStudent> allStudents = new ArrayList<>();
-    ArrayList<cardStudent> students = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private TutorAdapter adapter;
+
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private ValueEventListener dataListener;
+    private NavController navController;
 
     public static TutorSearchFragment newInstance() {
         return new TutorSearchFragment();
@@ -45,98 +50,94 @@ public class TutorSearchFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding = FragmentTutorSearchBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        return view;
+        binding = FragmentTutorSearchBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<TutorData> fakeTutorList = generateFakeData(10);
+        mViewModel = new ViewModelProvider(this).get(TutorSearchViewModel.class);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        // Initialize RecyclerView and Adapter
+        recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        navController = NavHostFragment.findNavController(this);
 
-        TutorAdapter adapter = new TutorAdapter(getContext(), fakeTutorList);
+        adapter = new TutorAdapter(getActivity(), new ArrayList<>(), new TutorAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String tutorId) {
+                Bundle bundle = new Bundle();
+                bundle.putString("tutorID", tutorId);
+                navController.navigate(R.id.action_tutorSearchFragment_to_studentCardFragment, bundle);
+
+            }
+        });
         recyclerView.setAdapter(adapter);
+
+        // Observe LiveData from ViewModel
+        mViewModel.getStudentsLD().observe(getViewLifecycleOwner(), new Observer<ArrayList<StudentAccount>>() {
+            @Override
+            public void onChanged(ArrayList<StudentAccount> students) {
+                // Update adapter with new data when LiveData changes
+                adapter.setStudents(students);
+                adapter.notifyDataSetChanged(); // Optional if adapter handles data set changes internally
+            }
+        });
+
+        // Fetch data from Firebase
+        fetchDataFromFirebase();
     }
 
-    private List<TutorData> generateFakeData(int count) {
-        List<TutorData> DataList = new ArrayList<>();
-        String photoUrl = "https://www.profguide.io/images/article/a/51/W8aCmKa3LE.webp";
-        String name = "Иван Петров";
-        String city = "Казань";
-        String direction = "Математика";
-        TutorData tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://api.synergytimes.ru/upload/iblock/cc3/3q0p23sxn6lxnpwltscog0cikx3gcvp6.jpeg";
-        name = "Андрей Козлов";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://static.tildacdn.com/tild6636-6566-4764-a138-623339633138/1_2_1.jpg";
-        name = "Наталья Васильева";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQk114m3sxmPRfDioAquhvgzr85_jEyvFsKdw0cIhV5Q&s";
-        name = "Никита Соколов";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://xn--80adrabb4aegksdjbafk0u.xn--p1ai/upload/iblock/509/zohvqzenra0223bcxtv3jy99mpfb3jqp.jpg";
-        name = "София Кузнецова";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://api.synergytimes.ru/upload/iblock/cc3/3q0p23sxn6lxnpwltscog0cikx3gcvp6.jpeg";
-        name = "Елена Николаева";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://st3.depositphotos.com/2492691/13346/i/450/depositphotos_133466140-stock-photo-business-man-working.jpg";
-        name = "Константин Иванов";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://gazon.media/userfls/news/large/2/10346_chto-nuzhno-uspet-poka-ty-st.jpg";
-        name = "Ольга Петрова";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://goo.gl/gEgYUd";
-        name = "Никита Соколов";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        photoUrl = "https://cdnn21.img.ria.ru/images/07e4/03/19/1569127302_0:210:2000:1335_600x0_80_0_0_e94286a549948e7d750da4574bfadf76.jpg";
-        name = "Павел Морозов";
-        city = "Казань";
-        direction = "Математика";
-        tutorData = new TutorData(name, city, direction, photoUrl);
-        DataList.add(tutorData);
-        return DataList;
+    public interface fragment1NextClick {
+        void  onFragment1NextClick();
     }
 
-    private void initListener(){
-        mViewModel.studentsLD.observe(getViewLifecycleOwner(), s  ->{
-            allStudents.clear();
-            allStudents.addAll(mViewModel.studentsLD.getValue());
-            students = new ArrayList<cardStudent>(allStudents);
-            CardAdapterTutor adapter = new CardAdapterTutor(students, this.getActivity());
+    private void fetchDataFromFirebase() {
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance("https://mentorium-9e9e2-default-rtdb.europe-west1.firebasedatabase.app").getReference();
+
+        mDatabase.child("students").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<StudentAccount> cardStudents = new ArrayList<>();
+
+                for (DataSnapshot studentSnapshot : dataSnapshot.getChildren()) {
+                    StudentAccount student = studentSnapshot.getValue(StudentAccount.class);
+                    if (student != null) {
+                        Log.d("TAG", "Student Name: " + student.getName());
+
+                        StudentAccount user = new StudentAccount(
+                                student.getPhoto(),
+                                student.getName(),
+                                student.getSurname(),
+                                student.getCity(),
+                                student.getBirthday(),
+                                student.getDirection(),
+                                student.getBudget(),
+                                student.getReason(),
+                                student.getId()
+                        );
+                        cardStudents.add(user);
+                    }
+                }
+
+                // Update ViewModel with the fetched data
+                mViewModel.updateStudentsList(cardStudents);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("TAG", "Failed to read value.", error.toException());
+            }
         });
     }
 
-    private void observe(){}
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Clean up listeners if needed
+    }
 }

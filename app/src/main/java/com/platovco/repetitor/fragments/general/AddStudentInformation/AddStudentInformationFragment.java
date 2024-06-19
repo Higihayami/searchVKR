@@ -126,27 +126,27 @@ public class AddStudentInformationFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        @SuppressLint("NotifyDataSetChanged") AddStudentInformationFragment.PhotosDownloadedCallback photosDownloadedCallback = () -> {
-            StudentAccount studentAccount = mViewModel.createStudentAccount();
-            AppwriteManager.INSTANCE.addStudentAccount(studentAccount, AppwriteManager.INSTANCE.getContinuation((s, throwable) -> {
-                if (throwable != null) Log.e("add", String.valueOf(throwable));
-
-            }));
-
-
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() ->
-                    Navigation.findNavController(requireActivity(), R.id.globalNavContainer).navigate(R.id.action_addStudentInformationFragment_to_studentMainFragment));
-        };
-        if (mViewModel.photoUri.getValue() == null) {
-            photosDownloadedCallback.allPhotosDownloaded();
-        } else {
-            MutableLiveData<User<Map<String, Object>>> liveData = new MutableLiveData<>();
-            AppwriteManager.INSTANCE.getAccount(liveData, AppwriteManager.INSTANCE.getContinuation((s, throwable) -> {
-            }));
-            liveData.observe(getViewLifecycleOwner(), objectAccount ->
-                    sendPhoto(mViewModel.photoUri.getValue(), objectAccount.getId(), photosDownloadedCallback));
-        }
+        //@SuppressLint("NotifyDataSetChanged") AddStudentInformationFragment.PhotosDownloadedCallback photosDownloadedCallback = () -> {
+        //    StudentAccount studentAccount = mViewModel.createStudentAccount();
+        //    AppwriteManager.INSTANCE.addStudentAccount(studentAccount, AppwriteManager.INSTANCE.getContinuation((s, throwable) -> {
+        //        if (throwable != null) Log.e("add", String.valueOf(throwable));
+//
+        //    }));
+//
+//
+        //    Handler handler = new Handler(Looper.getMainLooper());
+        //    handler.post(() ->
+        //            Navigation.findNavController(requireActivity(), R.id.globalNavContainer).navigate(R.id.action_addStudentInformationFragment_to_studentMainFragment));
+        //};
+        //if (mViewModel.photoUri.getValue() == null) {
+        //    photosDownloadedCallback.allPhotosDownloaded();
+        //} else {
+        //    MutableLiveData<User<Map<String, Object>>> liveData = new MutableLiveData<>();
+        //    AppwriteManager.INSTANCE.getAccount(liveData, AppwriteManager.INSTANCE.getContinuation((s, throwable) -> {
+        //    }));
+        //    liveData.observe(getViewLifecycleOwner(), objectAccount ->
+        //            sendPhoto(mViewModel.photoUri.getValue(), objectAccount.getId(), photosDownloadedCallback));
+        //}
     }
 
     public void sendPhoto(Uri uri, String uuid, AddStudentInformationFragment.PhotosDownloadedCallback photosSentCallback) {

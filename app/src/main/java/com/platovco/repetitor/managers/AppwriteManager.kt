@@ -37,7 +37,6 @@ object AppwriteManager {
                     "Education" to tutorAccount.education,
                     "Photo" to tutorAccount.photoUrl,
                     "Direction" to tutorAccount.direction,
-                    "Experience" to tutorAccount.experience,
                 )
             )
         } catch (e: Exception) {
@@ -45,25 +44,25 @@ object AppwriteManager {
         }
     }
 
-    suspend fun addStudentAccount(studentAccount: StudentAccount) {
-        val client = AppwriteClient.getClient()
-        val databases = Databases(client)
-        val uuid = getAccount().id
-        try {
-            databases.createDocument(
-                databaseId = "64a845269d40bb3fd619",
-                collectionId = "64a992739f88da356852",
-                documentId = uuid,
-                data = mapOf(
-                    "Name" to studentAccount.name,
-                    "Education" to studentAccount.age,
-                    "Photo" to studentAccount.photoUrl
-                )
-            )
-        } catch (e: Exception) {
-            Log.e("Appwrite", "Error: " + e.message)
-        }
-    }
+   // suspend fun addStudentAccount(studentAccount: StudentAccount) {
+   //     val client = AppwriteClient.getClient()
+   //     val databases = Databases(client)
+   //     val uuid = getAccount().id
+   //     try {
+   //         databases.createDocument(
+   //             databaseId = "64a845269d40bb3fd619",
+   //             collectionId = "64a992739f88da356852",
+   //             documentId = uuid,
+   //             data = mapOf(
+   //                 "Name" to studentAccount.name,
+   //                 "Education" to studentAccount.age,
+   //                 "Photo" to studentAccount.photoUrl
+   //             )
+   //         )
+   //     } catch (e: Exception) {
+   //         Log.e("Appwrite", "Error: " + e.message)
+   //     }
+   // }
     suspend fun signOut() {
         val client = AppwriteClient.getClient()
         val account = Account(client)

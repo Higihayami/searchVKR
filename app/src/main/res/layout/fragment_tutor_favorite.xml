@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.tutor.TutorFavorite.TutorFavoriteFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/dark_gradient"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/favoritesHeader"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_gradient"
+        android:padding="16dp"
+        android:text="Избранные"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:gravity="center"/>
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favoritesRecyclerView"
+        android:layout_width="match_parent"
+        tools:listitem="@layout/item_student"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+</LinearLayout>

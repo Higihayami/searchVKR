@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/student_card_graph"
+app:startDestination="@id/studentCardFragment">
+
+<fragment
+    android:id="@+id/studentCardFragment"
+    android:name="com.platovco.repetitor.fragments.tutor.StudentCard.StudentCardFragment"
+    android:label="fragment_student_card"
+    tools:layout="@layout/fragment_student_card" />
+</navigation>

@@ -20,13 +20,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.platovco.repetitor.R;
 import com.platovco.repetitor.databinding.FragmentStudentProfileBinding;
-import com.platovco.repetitor.fragments.tutor.TutorProfile.TutorProfileViewModel;
 import com.platovco.repetitor.managers.AppwriteManager;
 import com.platovco.repetitor.managers.CompressorManager;
 import com.platovco.repetitor.models.StudentAccount;
-import com.platovco.repetitor.models.TutorAccount;
 import com.platovco.repetitor.utils.PhotoUtil;
 
 import java.io.File;
@@ -110,7 +107,7 @@ public class StudentProfileFragment extends Fragment {
     private void updateImage(Uri uri){
         Observable.just(uri)
                 .flatMap(imageUri -> compressImage(new File(Objects.requireNonNull(PhotoUtil.getPathFromUri(requireContext(), imageUri)))))
-                .flatMap(compressedImage -> Objects.requireNonNull(uploadImage(compressedImage, String.valueOf(Objects.requireNonNull(mViewModel.studentLD.getValue()).getUuid())))
+                .flatMap(compressedImage -> Objects.requireNonNull(uploadImage(compressedImage, String.valueOf(Objects.requireNonNull(mViewModel.studentLD.getValue()).getId())))
                         .subscribeOn(AndroidSchedulers.mainThread()))
                 .subscribe(
                         url -> Log.d("Загружен URL: ", String.valueOf(url)),
@@ -141,13 +138,13 @@ public class StudentProfileFragment extends Fragment {
             nameTV.setText(studentAccount.getName());
         }
 
-        if (studentAccount.getPhotoUrl() != null && !studentAccount.getPhotoUrl().equals("null")) {
-            Glide.with(requireContext()).load(studentAccount.getPhotoUrl()).into(userPhotoIV);
+        if (studentAccount.getPhoto() != null && !studentAccount.getPhoto().equals("null")) {
+            Glide.with(requireContext()).load(studentAccount.getPhoto()).into(userPhotoIV);
         }
 
-        if (studentAccount.getPhotoUrl() != null && !studentAccount.getPhotoUrl().equals("null")) {
+        if (studentAccount.getPhoto() != null && !studentAccount.getPhoto().equals("null")) {
             Glide.with(requireContext())
-                    .load(studentAccount.getPhotoUrl())
+                    .load(studentAccount.getPhoto())
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .centerCrop()

@@ -12,17 +12,26 @@ import java.util.Map;
 public class TutorAccount {
     private String photoUrl;
     private String name;
+
+    private String surname;
+    private String city;
+    private String birthday;
     private String education;
     private String direction;
-    private String experience;
+    private String price;
+    private String reason;
     private String uuid;
 
-    public TutorAccount(String photoUrl, String name, String high, String direction, String experience, String uuid) {
+    public TutorAccount(String photoUrl, String name, String surname, String city, String birthday , String high, String direction, String price, String reason, String uuid) {
         this.photoUrl = photoUrl;
         this.name = name;
+        this.surname = surname;
+        this.city = city;
+        this.birthday = birthday;
         this.education = high;
         this.direction = direction;
-        this.experience = experience;
+        this.price = price;
+        this.reason = reason;
         this.uuid = uuid;
     }
 
@@ -31,9 +40,13 @@ public class TutorAccount {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", uuid);
         result.put("name", name);
+        result.put("surname", surname);
+        result.put("city", city);
+        result.put("birthday", birthday);
         result.put("education", education);
         result.put("direction", direction);
-        result.put("experience", experience);
+        result.put("price", price);
+        result.put("reason", reason);
         result.put("photoUrl", photoUrl);
 
         return result;
@@ -73,14 +86,6 @@ public class TutorAccount {
         this.direction = carBrand;
     }
 
-    public String getExperience() {
-        return experience;
-    }
-
-    public void setExperience(String carNumber) {
-        this.experience = carNumber;
-    }
-
     public String getUuid() {
         return uuid;
     }
@@ -89,4 +94,43 @@ public class TutorAccount {
         this.uuid = uuid;
     }
 
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 }

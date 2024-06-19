@@ -48,9 +48,4 @@ public class MainActivity extends AppCompatActivity {
         //    finish();
         //});
     }
-
-    @Override
-    public void onBackPressed() {
-        Navigation.findNavController(this, R.id.globalNavContainer).navigateUp();
-    }
 }

@@ -18,8 +18,8 @@ public class AddStudentInformationViewModel extends ViewModel {
     public MutableLiveData<String> ageLD = new MutableLiveData<>();
 
 
-    public StudentAccount createStudentAccount() {
-        return new StudentAccount(photoUrl.getValue(), nameLD.getValue(),
-                Integer.valueOf(Objects.requireNonNull(ageLD.getValue())));
-    }
+    //public StudentAccount createStudentAccount() {
+    //    //return new StudentAccount(photoUrl.getValue(), nameLD.getValue(),
+    //            //        Integer.valueOf(Objects.requireNonNull(ageLD.getValue())));
+    //}
 }

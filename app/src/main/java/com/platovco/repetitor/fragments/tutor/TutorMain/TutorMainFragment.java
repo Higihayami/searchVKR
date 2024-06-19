@@ -20,13 +20,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.platovco.repetitor.R;
 import com.platovco.repetitor.databinding.FragmentTutorMainBinding;
 import com.platovco.repetitor.fragments.general.AddTutorInformation.AddTutorInformationViewModel;
+import com.platovco.repetitor.fragments.tutor.TutorSearch.TutorSearchFragment;
 
 import java.math.BigInteger;
 
-public class TutorMainFragment extends Fragment {
+public class TutorMainFragment extends Fragment{
 
     private TutorMainViewModel mViewModel;
     private FragmentTutorMainBinding binding;
+    NavController navController;
 
     public static TutorMainFragment newInstance() {
         return new TutorMainFragment();
@@ -46,13 +48,15 @@ public class TutorMainFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(TutorMainViewModel.class);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         BottomNavigationView mainBNV = binding.mainBNV;
         NavHostFragment host = (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.place_holder);
-        NavController navController = host.getNavController();
+        navController = NavHostFragment.findNavController(this);
+        navController = host.getNavController();
         NavigationUI.setupWithNavController(mainBNV, navController);
     }
 }
